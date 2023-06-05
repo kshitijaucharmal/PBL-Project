@@ -6,7 +6,7 @@ seat_nos = []
 
 # special case page 20
 
-with open('students.pdf', 'rb') as f:
+with open('files/students.pdf', 'rb') as f:
     content = list(pdftotext.PDF(f))
     content = content[:-1]
 
