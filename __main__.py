@@ -1,8 +1,6 @@
 from pprint import pprint
 import re
 import pdftotext
-import pandas as pd
-
 
 seat_nos = []
 
