@@ -13,11 +13,14 @@ with open('files/students.pdf', 'rb') as f:
     # Special Case
     # print(content[19])
 
+    i = 0
+    page = content[i]
     for i,page in enumerate(content):
         page = list(page.split('\n'))
-        
+
         # Get seat_no on line 8(7)
         seat_no = re.search('F\S*', page[7])[0]
         seat_nos.append(seat_no)
 
-pprint(seat_nos)
+print(content[0])
+pprint(seat_nos[0])
