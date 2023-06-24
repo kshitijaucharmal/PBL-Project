@@ -1,16 +1,20 @@
-import PyPDF2
-import re
-from tqdm import tqdm
+# Imports
+import PyPDF2 # To convert pdf to text
+import re # Use regex
+from tqdm import tqdm # Progress bar
 
 # Read the pdf file
 a = PyPDF2.PdfReader('files/students.pdf')
 
+# Pages with errors
 two_sem_prob = []
 sgpa_prob = []
 
 subject_set = []
-s=''
-for i in tqdm(range(0,len(a.pages))):
+document = ''
+
+# Loop though pages
+for i in tqdm(range(0,len(a.pages)-1)):
     # Extract text
     page = a.pages[i].extract_text()
 
@@ -29,86 +33,111 @@ for i in tqdm(range(0,len(a.pages))):
         continue
 
     # Add to pages
-    s += page
+    document += page
 
     # Identify Subject Group
     sme = re.findall(r'101011 ENGINEERING MECHANICS', page)
     subject_set.append(len(sme) == 0)
+    
+    pass
 
-# Actual Finding
-sr_no = re.findall(r'F1900\S*', s)
-m = re.findall(r'[0-9]*/[0-9]*', s)
+# Actual Finding With Regex
+sr_no = re.findall(r'F1900\S*', document)
+marks = re.findall(r'[0-9]*/[0-9]*', document)
+
+# Find SGPA
+sgpa_match = re.findall(r'SGPA1 : [0-9]\.?[0-9]*', document)
+sgpa = []
+for s in sgpa_match:
+    s = s.split()[2]
+    sgpa.append(s)
 
 # Report errors
 print('These Pages have been skipped due to faults:')
 print(f'SGPA is NaN:', sgpa_prob)
 print(f'Two Semesters result given', two_sem_prob)
 
+# Write to csv
 with open('output.csv','w') as e:
-    e.write('Rollno,EM_ISE,EM_ESE,EM_THEORY_TOT,EM_TW,SME_ISE,SME_ESE,SME_THEORY_TOT,SME_TW,BEE_ISE,BEE_ESE,BEE_THEORY_TOT,BEE_TW,EM1_ISE,EM1_ESE,EM1_THEORY_TOT,EM1_TW,EP_ISE,EP_ESE,EP_THEORY_TOT,EP_TW,BXE_ISE,BXE_ESE,BXE_THEORY_TOT,BXE_TW,EC_ISE,EC_ESE,EC_THEORY_TOT,EC_TW,PPS_ISE,PPS_ESE,PPS_THEORY_TOT,PPS_TW\n')    
+    # Write all subject names
+    e.write('Rollno,\
+        EM_ISE,EM_ESE,EM_THEORY_TOT,EM_TW,\
+        SME_ISE,SME_ESE,SME_THEORY_TOT,SME_TW,\
+        BEE_ISE,BEE_ESE,BEE_THEORY_TOT,BEE_TW,\
+        EM1_ISE,EM1_ESE,EM1_THEORY_TOT,EM1_TW,\
+        EP_ISE,EP_ESE,EP_THEORY_TOT,EP_TW,\
+        BXE_ISE,BXE_ESE,BXE_THEORY_TOT,BXE_TW,\
+        EC_ISE,EC_ESE,EC_THEORY_TOT,EC_TW,\
+        PPS_ISE,PPS_ESE,PPS_THEORY_TOT,PPS_TW,SGPA\n')
     for i in range(len(sr_no)):
         if subject_set[i]:
             e.write(sr_no[i]+',')
+
             #First subject SME
             e.write(','*4)
-            e.write(m[1+22*i][:3] +',')
-            e.write(m[2+22*i][:3] +',')
-            e.write(m[3+22*i][:3] +',')
-            e.write(m[4+22*i][:3]+',')
+            e.write(marks[1+22*i][:3] +',')
+            e.write(marks[2+22*i][:3] +',')
+            e.write(marks[3+22*i][:3] +',')
+            e.write(marks[4+22*i][:3]+',')
             
             #Third subject em1
             e.write(','*4)
-            e.write(m[9+22*i][:3]+',')
-            e.write(m[10+22*i][:3]+',')
-            e.write(m[11+22*i][:3]+',')
-            e.write(m[12+22*i][:3]+',')
+            e.write(marks[9+22*i][:3]+',')
+            e.write(marks[10+22*i][:3]+',')
+            e.write(marks[11+22*i][:3]+',')
+            e.write(marks[12+22*i][:3]+',')
             
             #Second subject BXE
             e.write(','*4)
-            e.write(m[5+22*i][:3]+',')
-            e.write(m[6+22*i][:3]+',')
-            e.write(m[7+22*i][:3]+',')
-            e.write(m[8+22*i][:3]+',')
+            e.write(marks[5+22*i][:3]+',')
+            e.write(marks[6+22*i][:3]+',')
+            e.write(marks[7+22*i][:3]+',')
+            e.write(marks[8+22*i][:3]+',')
             
             #Fourth object ec
-            e.write(m[13+22*i][:3]+',')
-            e.write(m[14+22*i][:3]+',')
-            e.write(m[15+22*i][:3]+',')
-            e.write(m[16+22*i][:3]+',')
+            e.write(marks[13+22*i][:3]+',')
+            e.write(marks[14+22*i][:3]+',')
+            e.write(marks[15+22*i][:3]+',')
+            e.write(marks[16+22*i][:3]+',')
             
             #Fifth subject pps
-            e.write(m[17+22*i][:3]+',')
-            e.write(m[18+22*i][:3]+',')
-            e.write(m[19+22*i][:3]+',')
-            e.write(m[20+22*i][:3]+',\n')
+            e.write(marks[17+22*i][:3]+',')
+            e.write(marks[18+22*i][:3]+',')
+            e.write(marks[19+22*i][:3]+',')
+            e.write(marks[20+22*i][:3]+',')
             
         else :
             e.write(sr_no[i]+',')
-            e.write(m[1+22*i][:3] +',')
-            e.write(m[2+22*i][:3] +',')
-            e.write(m[3+22*i][:3] +',')
-            e.write(m[4+22*i][:3]+',')
+
+            # First Subject
+            e.write(marks[1+22*i][:3] +',')
+            e.write(marks[2+22*i][:3] +',')
+            e.write(marks[3+22*i][:3] +',')
+            e.write(marks[4+22*i][:3]+',')
             
             #Second subject sme
-            e.write(m[5+22*i][:3]+',')
-            e.write(m[6+22*i][:3]+',')
-            e.write(m[7+22*i][:3]+',')
-            e.write(m[8+22*i][:3]+',')
+            e.write(marks[5+22*i][:3]+',')
+            e.write(marks[6+22*i][:3]+',')
+            e.write(marks[7+22*i][:3]+',')
+            e.write(marks[8+22*i][:3]+',')
             
             #Third subject BEE
-            e.write(m[9+22*i][:3]+',')
-            e.write(m[10+22*i][:3]+',')
-            e.write(m[11+22*i][:3]+',')
-            e.write(m[12+22*i][:3]+',')
+            e.write(marks[9+22*i][:3]+',')
+            e.write(marks[10+22*i][:3]+',')
+            e.write(marks[11+22*i][:3]+',')
+            e.write(marks[12+22*i][:3]+',')
             
             #Fourth object em1
-            e.write(m[13+22*i][:3]+',')
-            e.write(m[14+22*i][:3]+',')
-            e.write(m[15+22*i][:3]+',')
-            e.write(m[16+22*i][:3]+',')
+            e.write(marks[13+22*i][:3]+',')
+            e.write(marks[14+22*i][:3]+',')
+            e.write(marks[15+22*i][:3]+',')
+            e.write(marks[16+22*i][:3]+',')
             
             #Fifth subject ep
-            e.write(m[17+22*i][:3]+',')
-            e.write(m[18+22*i][:3]+',')
-            e.write(m[19+22*i][:3]+',')
-            e.write(m[20+22*i][:3]+',\n')
+            e.write(marks[17+22*i][:3]+',')
+            e.write(marks[18+22*i][:3]+',')
+            e.write(marks[19+22*i][:3]+',')
+            e.write(marks[20+22*i][:3]+',')
+            e.write(','*12)
+        e.write(sgpa[i])
+        e.write('\n')
