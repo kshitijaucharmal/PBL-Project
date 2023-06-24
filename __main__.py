@@ -13,6 +13,7 @@ sgpa_prob = []
 subject_set = []
 document = ''
 all_marks = []
+sgpa = []
 
 # Loop though pages
 for i in tqdm(range(len(a.pages)-1)):
@@ -22,15 +23,9 @@ for i in tqdm(range(len(a.pages)-1)):
     # Check if Sem2 exists 
     sem2 = re.findall('SEM\.:2', page)
 
-    # Check if SGPA is not present
-    no_SGPA = re.findall('SGPA1 : --', page)
-
-    # Skip Either way
+    # Skip this page if 2 sems
     if len(sem2) > 0:
         two_sem_prob.append(i+1)
-        continue
-    if len(no_SGPA) > 0:
-        sgpa_prob.append(i+1)
         continue
 
     # Identify Subject Group
@@ -39,27 +34,32 @@ for i in tqdm(range(len(a.pages)-1)):
     
     # Get all marks
     marks = re.findall(r'[0-9]*[#$]?/[0-9]*', page)
+
+    # Get SGPA
+    sgpa_match = re.findall(r'SGPA1 : [0-9]\.?[0-9]*', page)
+    s = ''
+    # If sgpa is present
+    if len(sgpa_match) > 0:
+        s = sgpa_match[0].split()[2]
+    else:
+        s = '-'
+        # This means student is absent in some subject, so find absentees
+        for i in range(len(marks)):
+            if marks[i][0] == '/':
+                marks[i] = 'AB'
+
+    sgpa.append(s)
     all_marks.append(marks)
 
     # Add to pages
     document += page
-
     pass
 
-# Actual Finding With Regex
+# Finding Sr nos. With Regex
 sr_no = re.findall(r'F1900\S*', document)
-# marks = re.findall(r'[0-9]*/[0-9]*', document)
-
-# Find SGPA
-sgpa_match = re.findall(r'SGPA1 : [0-9]\.?[0-9]*', document)
-sgpa = []
-for s in sgpa_match:
-    s = s.split()[2]
-    sgpa.append(s)
 
 # Report errors
 print('These Pages have been skipped due to faults:')
-print(f'SGPA is NaN:', sgpa_prob)
 print(f'Two Semesters result given', two_sem_prob)
 
 # Write to csv
