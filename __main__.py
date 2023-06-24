@@ -12,9 +12,10 @@ sgpa_prob = []
 
 subject_set = []
 document = ''
+all_marks = []
 
 # Loop though pages
-for i in tqdm(range(0,len(a.pages)-1)):
+for i in tqdm(range(len(a.pages)-1)):
     # Extract text
     page = a.pages[i].extract_text()
 
@@ -32,18 +33,22 @@ for i in tqdm(range(0,len(a.pages)-1)):
         sgpa_prob.append(i+1)
         continue
 
-    # Add to pages
-    document += page
-
     # Identify Subject Group
     sme = re.findall(r'101011 ENGINEERING MECHANICS', page)
     subject_set.append(len(sme) == 0)
     
+    # Get all marks
+    marks = re.findall(r'[0-9]*[#$]?/[0-9]*', page)
+    all_marks.append(marks)
+
+    # Add to pages
+    document += page
+
     pass
 
 # Actual Finding With Regex
 sr_no = re.findall(r'F1900\S*', document)
-marks = re.findall(r'[0-9]*/[0-9]*', document)
+# marks = re.findall(r'[0-9]*/[0-9]*', document)
 
 # Find SGPA
 sgpa_match = re.findall(r'SGPA1 : [0-9]\.?[0-9]*', document)
@@ -70,74 +75,75 @@ with open('output.csv','w') as e:
         EC_ISE,EC_ESE,EC_THEORY_TOT,EC_TW,\
         PPS_ISE,PPS_ESE,PPS_THEORY_TOT,PPS_TW,SGPA\n')
     for i in range(len(sr_no)):
+        current_marks = all_marks[i]
         if subject_set[i]:
             e.write(sr_no[i]+',')
 
             #First subject SME
-            e.write(','*4)
-            e.write(marks[1+22*i][:3] +',')
-            e.write(marks[2+22*i][:3] +',')
-            e.write(marks[3+22*i][:3] +',')
-            e.write(marks[4+22*i][:3]+',')
+            e.write(',' * 4)
+            e.write(current_marks[1][:3] + ',')
+            e.write(current_marks[2][:3] + ',')
+            e.write(current_marks[3][:3] + ',')
+            e.write(current_marks[4][:3] + ',')
             
             #Third subject em1
-            e.write(','*4)
-            e.write(marks[9+22*i][:3]+',')
-            e.write(marks[10+22*i][:3]+',')
-            e.write(marks[11+22*i][:3]+',')
-            e.write(marks[12+22*i][:3]+',')
+            e.write(',' * 4)
+            e.write(current_marks[9][:3] + ',')
+            e.write(current_marks[10][:3] + ',')
+            e.write(current_marks[11][:3] + ',')
+            e.write(current_marks[12][:3] + ',')
             
             #Second subject BXE
-            e.write(','*4)
-            e.write(marks[5+22*i][:3]+',')
-            e.write(marks[6+22*i][:3]+',')
-            e.write(marks[7+22*i][:3]+',')
-            e.write(marks[8+22*i][:3]+',')
+            e.write(',' * 4)
+            e.write(current_marks[5][:3] + ',')
+            e.write(current_marks[6][:3] + ',')
+            e.write(current_marks[7][:3] + ',')
+            e.write(current_marks[8][:3] + ',')
             
             #Fourth object ec
-            e.write(marks[13+22*i][:3]+',')
-            e.write(marks[14+22*i][:3]+',')
-            e.write(marks[15+22*i][:3]+',')
-            e.write(marks[16+22*i][:3]+',')
+            e.write(current_marks[13][:3] + ',')
+            e.write(current_marks[14][:3] + ',')
+            e.write(current_marks[15][:3] + ',')
+            e.write(current_marks[16][:3] + ',')
             
             #Fifth subject pps
-            e.write(marks[17+22*i][:3]+',')
-            e.write(marks[18+22*i][:3]+',')
-            e.write(marks[19+22*i][:3]+',')
-            e.write(marks[20+22*i][:3]+',')
+            e.write(current_marks[17][:3] + ',')
+            e.write(current_marks[18][:3] + ',')
+            e.write(current_marks[19][:3] + ',')
+            e.write(current_marks[20][:3] + ',')
             
         else :
-            e.write(sr_no[i]+',')
+            e.write(sr_no[i] + ',')
 
             # First Subject
-            e.write(marks[1+22*i][:3] +',')
-            e.write(marks[2+22*i][:3] +',')
-            e.write(marks[3+22*i][:3] +',')
-            e.write(marks[4+22*i][:3]+',')
+            e.write(current_marks[1][:3]  + ',')
+            e.write(current_marks[2][:3]  + ',')
+            e.write(current_marks[3][:3]  + ',')
+            e.write(current_marks[4][:3] + ',')
             
             #Second subject sme
-            e.write(marks[5+22*i][:3]+',')
-            e.write(marks[6+22*i][:3]+',')
-            e.write(marks[7+22*i][:3]+',')
-            e.write(marks[8+22*i][:3]+',')
+            e.write(current_marks[5][:3] + ',')
+            e.write(current_marks[6][:3] + ',')
+            e.write(current_marks[7][:3] + ',')
+            e.write(current_marks[8][:3] + ',')
             
             #Third subject BEE
-            e.write(marks[9+22*i][:3]+',')
-            e.write(marks[10+22*i][:3]+',')
-            e.write(marks[11+22*i][:3]+',')
-            e.write(marks[12+22*i][:3]+',')
+            e.write(current_marks[9][:3] + ',')
+            e.write(current_marks[10][:3] + ',')
+            e.write(current_marks[11][:3] + ',')
+            e.write(current_marks[12][:3] + ',')
             
             #Fourth object em1
-            e.write(marks[13+22*i][:3]+',')
-            e.write(marks[14+22*i][:3]+',')
-            e.write(marks[15+22*i][:3]+',')
-            e.write(marks[16+22*i][:3]+',')
+            e.write(current_marks[13][:3] + ',')
+            e.write(current_marks[14][:3] + ',')
+            e.write(current_marks[15][:3] + ',')
+            e.write(current_marks[16][:3] + ',')
             
             #Fifth subject ep
-            e.write(marks[17+22*i][:3]+',')
-            e.write(marks[18+22*i][:3]+',')
-            e.write(marks[19+22*i][:3]+',')
-            e.write(marks[20+22*i][:3]+',')
-            e.write(','*12)
+            e.write(current_marks[17][:3] + ',')
+            e.write(current_marks[18][:3] + ',')
+            e.write(current_marks[19][:3] + ',')
+            e.write(current_marks[20][:3] + ',')
+            e.write(',' * 12)
         e.write(sgpa[i])
         e.write('\n')
