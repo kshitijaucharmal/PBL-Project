@@ -72,11 +72,6 @@ class MyGUI(QMainWindow):
             mssg.setText(file_0)
             mssg.exec()
 
-
-        
-        
-
-        
     def resiseEvent(self, event):
         try:
             pixmap = QtGui.QPixmap(self.current_file)
