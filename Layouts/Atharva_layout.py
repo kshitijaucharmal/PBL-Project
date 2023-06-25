@@ -1,19 +1,19 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QRadioButton, QMainWindow, QFileDialog, QWidget, QComboBox , QGridLayout, QLineEdit, QPushButton, QLabel
+from PyQt6.QtWidgets import QApplication, QFileDialog, QWidget, QGridLayout, QLineEdit, QPushButton, QLabel
 from pathlib import Path
 import qdarktheme
 from PyQt6.QtCore import Qt
 import darkdetect   #To find if user is on dark theme
 
-
-
 class MainWindow(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.setWindowTitle('PyQt File Dialog')
+        self.path = "PATH NOT PROVIDED"
+
+        self.setWindowTitle('Result Converter')
         self.setGeometry(100, 100, 900, 150)
-        if(darkdetect.isDark()):                          #To set theme as per user's system theme
+        if not darkdetect.isDark():                          #To set theme as per user's system theme:
             qdarktheme.setup_theme()
         else:
             qdarktheme.setup_theme("light")
@@ -28,9 +28,6 @@ class MainWindow(QWidget):
         Name_Label=QLabel("<h3>File:</h3>")
         Name_Label.setAlignment(Qt.AlignmentFlag.AlignCenter) #align file to center of gridbox
 
-
-
-
         self.filename_edit = QLineEdit()
 
         layout.addWidget(Name_Label, 0, 0)
@@ -38,12 +35,10 @@ class MainWindow(QWidget):
         layout.addWidget(file_browse, 0, 8)
         layout.addWidget(file_save,2,3)
 
-
         self.show()
 
     def sav(self):
-        print(self.filename_edit.text())
-
+        print(self.path)
 
     def open_file_dialog(self):
         filename, ok = QFileDialog.getOpenFileName(
@@ -53,12 +48,8 @@ class MainWindow(QWidget):
             "pdf files (*.pdf)"
         )
         if filename:
-            path = Path(filename)
-           # self.sav(str(path))
-            self.filename_edit.setText(str(path))
-
-
-
+            self.path = Path(filename)
+            self.filename_edit.setText(str(self.path))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
