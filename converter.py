@@ -1,7 +1,6 @@
 # Imports
 import PyPDF2 # To convert pdf to text
 import re # Use regex
-from tqdm import tqdm
 
 class Converter:
     def __init__(self, pdfpath, csvpath):
@@ -27,7 +26,7 @@ class Converter:
     # This is the main process (Call this to instantly do everything)
     def convert(self):
         # Convert page by page
-        for i in tqdm(range(self.n_pages)):
+        for i in range(self.n_pages):
             self.step(i)
 
         # Write to csv file
