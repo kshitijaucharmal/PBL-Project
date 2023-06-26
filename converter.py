@@ -90,14 +90,14 @@ class Converter:
         with open(self.csvpath,'w') as e:
             # Write all subject names
             e.write('Rollno,\
-                EM_ISE,EM_ESE,EM_THEORY_TOT,EM_TW,\
-                SME_ISE,SME_ESE,SME_THEORY_TOT,SME_TW,\
-                BEE_ISE,BEE_ESE,BEE_THEORY_TOT,BEE_TW,\
-                EM1_ISE,EM1_ESE,EM1_THEORY_TOT,EM1_TW,\
-                EP_ISE,EP_ESE,EP_THEORY_TOT,EP_TW,\
-                BXE_ISE,BXE_ESE,BXE_THEORY_TOT,BXE_TW,\
-                EC_ISE,EC_ESE,EC_THEORY_TOT,EC_TW,\
-                PPS_ISE,PPS_ESE,PPS_THEORY_TOT,PPS_TW,SGPA\n')
+                SUB1_ISE,SUB1_ESE,SUB1_THEORY_TOT,SUB1_TW,\
+                SUB2_ISE,SUB2_ESE,SUB2_THEORY_TOT,SUB2_TW,\
+                SUB3_ISE,SUB3_ESE,SUB3_THEORY_TOT,SUB3_TW,\
+                SUB4_ISE,SUB4_ESE,SUB4_THEORY_TOT,SUB4_TW,\
+                SUB5_ISE,SUB5_ESE,SUB5_THEORY_TOT,SUB5_TW,\
+                SUB6_ISE,SUB6_ESE,SUB6_THEORY_TOT,SUB6_TW,\
+                SUB7_ISE,SUB7_ESE,SUB7_THEORY_TOT,SUB7_TW,\
+                SUB8_ISE,SUB8_ESE,SUB8_THEORY_TOT,SUB8_TW,SGPA\n')
 
             # Loop over all students
             for i in range(len(sr_nos)):
