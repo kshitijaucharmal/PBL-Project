@@ -21,7 +21,7 @@ class MainWindow(QWidget):
         self.setGeometry(100, 100, 900, 180)
 
         # Dark Mode detection
-        if not darkdetect.isDark():
+        if darkdetect.isDark():
             qdarktheme.setup_theme()
         else:
             qdarktheme.setup_theme("light")
