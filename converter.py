@@ -1,3 +1,4 @@
+# Imports
 import PyPDF2 # To convert pdf to text
 import re # Use regex
 
