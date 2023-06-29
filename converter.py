@@ -10,6 +10,7 @@ class Converter:
 
         # Pages with errors
         self.two_sem_prob = []
+        self.write_error = False
 
         self.subject_set = []
         self.document = ''
@@ -78,6 +79,9 @@ class Converter:
     def report_errors(self):
         # Report errors
         s = ''
+        if self.write_error:
+            s += '!!! File is already open, Please try again after closing. !!!\n'
+            return s
         s += 'These Pages have been skipped due to faults: \n'
         s += str(self.two_sem_prob)
         return s
@@ -86,8 +90,15 @@ class Converter:
         # Finding Sr nos. With Regex
         sr_nos = re.findall(r'F1900\S*', self.document)
 
+
+        try:
+            e = open(self.csvpath, 'w')
+        except Exception:
+            self.write_error = True
+            return
+
         # Write to csv
-        with open(self.csvpath,'w') as e:
+        with e:
             # Write all subject names
             e.write('Rollno,\
                 SUB1_ISE,SUB1_ESE,SUB1_THEORY_TOT,SUB1_TW,\
