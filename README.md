@@ -9,17 +9,23 @@ into a csv format to be easily formatted in MS Excel.
 
 ### Windows
 1. Click Releases Section at the right of this page.
-2. Download result_analysis.zip file.
-3. Extract the zip file (using Winrar).
-4. Open Extracted folder.
-5. Click on result_analysis.exe (Application) file.
+2. Download ResultAnalysis.windows.exe file.
+3. Double click on the exe file.
 
 ### Linux
-1. Click On Code Button At the top.
-2. Download as zip.
-3. Extract zip file and open the folder in a terminal.
-4. Run <code>python -r requirements.txt</code>
-5. Run <code>python result_analysis.py</code> to execute.
+
+#### Executable
+1. Download Latest Release from the Releases section
+2. Open the folder where file is downloaded in terminal
+3. run <code>./\<filename\></code>
+
+#### Manual
+```bash
+git clone https://github.com/kshitijaucharmal/PBL-Project.git
+cd PBL-Project
+python -r requirements.txt
+python result_analysis.py
+```
 
 ## Application Usage
 
