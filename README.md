@@ -20,6 +20,7 @@ into a csv format to be easily formatted in MS Excel.
 3. run <code>./\<filename\></code>
 
 #### Manual
+Run these commands in the terminal line by line.
 ```bash
 git clone https://github.com/kshitijaucharmal/PBL-Project.git
 cd PBL-Project
@@ -32,5 +33,3 @@ python result_analysis.py
 1. Select pdf file by clicking on browse.
 2. Click Submit.
 3. File will be saved in given path.
-
-## Enjoy
