@@ -90,7 +90,11 @@ class MainWindow(QWidget):
         pass
 
     def print_pages(self):
-        self.pages_to_be_skipped = list(map(int, self.skipped_pages.text().split(',')))
+        k = self.skipped_pages.text()
+        if len(k) == 0:
+            self.pages_to_be_skipped = []
+            return
+        self.pages_to_be_skipped = list(map(int, k.split(',')))
 
     def set_progress(self, val):
         if val >= self.progressbar.maximum():
