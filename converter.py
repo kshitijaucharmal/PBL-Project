@@ -21,7 +21,7 @@ class Converter:
         self.converted_doc = PyPDF2.PdfReader(pdfpath)
         
         # Number of pages (The last is empty so skip it)
-        self.n_pages = len(self.converted_doc.pages) - 1
+        self.n_pages = len(self.converted_doc.pages)
         pass
 
     # This is the main process (Call this to instantly do everything)
