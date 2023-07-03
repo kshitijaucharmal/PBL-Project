@@ -21,7 +21,7 @@ class Converter:
         self.converted_doc = PyPDF2.PdfReader(pdfpath)
         
         # Number of pages (The last is empty so skip it)
-        self.n_pages = len(self.converted_doc.pages) - 1
+        self.n_pages = len(self.converted_doc.pages)
         pass
 
     # This is the main process (Call this to instantly do everything)
@@ -45,9 +45,9 @@ class Converter:
         sem2 = re.findall('SEM\.:2', page)
 
         # Skip this page if 2 sems
-        if len(sem2) > 0:
-            self.two_sem_prob.append(i+1)
-            return
+        # if len(sem2) > 0:
+            # self.two_sem_prob.append(i+1)
+            # return
 
         # Identify Subject Group
         sme = re.findall(r'101011 ENGINEERING MECHANICS', page)
@@ -57,7 +57,7 @@ class Converter:
         marks = re.findall(r'[0-9]*[#$]?/[0-9]*', page)
 
         # Get SGPA
-        sgpa_match = re.findall(r'SGPA1 : [0-9]\.?[0-9]*', page)
+        sgpa_match = re.findall(r'SGPA[1]? : [0-9]\.?[0-9]*', page)
         s = ''
         # If sgpa is present
         if len(sgpa_match) > 0:
@@ -101,14 +101,19 @@ class Converter:
         with e:
             # Write all subject names
             e.write('Rollno,\
-                EM_ISE,EM_ESE,EM_THEORY_TOT,EM_TW,\
-                SME_ISE,SME_ESE,SME_THEORY_TOT,SME_TW,\
-                BEE_ISE,BEE_ESE,BEE_THEORY_TOT,BEE_TW,\
-                EM1_ISE,EM1_ESE,EM1_THEORY_TOT,EM1_TW,\
-                EP_ISE,EP_ESE,EP_THEORY_TOT,EP_TW,\
-                BXE_ISE,BXE_ESE,BXE_THEORY_TOT,BXE_TW,\
-                EC_ISE,EC_ESE,EC_THEORY_TOT,EC_TW,\
-                PPS_ISE,PPS_ESE,PPS_THEORY_TOT,PPS_TW,SGPA\n')
+EM_ISE,EM_ESE,EM_THEORY_TOT,EM_TW,\
+SME_ISE,SME_ESE,SME_THEORY_TOT,SME_TW,\
+BEE_ISE,BEE_ESE,BEE_THEORY_TOT,BEE_TW,\
+EM1_ISE,EM1_ESE,EM1_THEORY_TOT,EM1_TW,\
+EP_ISE,EP_ESE,EP_THEORY_TOT,EP_TW,\
+BXE_ISE,BXE_ESE,BXE_THEORY_TOT,BXE_TW,\
+EC_ISE,EC_ESE,EC_THEORY_TOT,EC_TW,\
+PPS_ISE,PPS_ESE,PPS_THEORY_TOT,PPS_TW,\
+EM2_ISE,EM2_ESE,EM2_THEORY_TOT,EM2_TW,\
+EG_ESE,EG_TOT,EG_TW,\
+WS_PR,\
+PBL_TW,PBL_PR,\
+SGPA\n')
 
             # Loop over all students
             for i in range(len(sr_nos)):
@@ -161,6 +166,7 @@ class Converter:
         e.write(current_marks[18][:3] + ',')
         e.write(current_marks[19][:3] + ',')
         e.write(current_marks[20][:3] + ',')
+        e.write(',' * 10)
         pass
 
     def subject_set2(self, e, current_marks, sr_no):
@@ -195,5 +201,5 @@ class Converter:
         e.write(current_marks[18][:3] + ',')
         e.write(current_marks[19][:3] + ',')
         e.write(current_marks[20][:3] + ',')
-        e.write(',' * 12)
+        e.write(',' * 22)
         pass
