@@ -101,14 +101,14 @@ class Converter:
         with e:
             # Write all subject names
             e.write('Rollno,\
-                EM_ISE,EM_ESE,EM_THEORY_TOT,EM_TW,\
-                SME_ISE,SME_ESE,SME_THEORY_TOT,SME_TW,\
-                BEE_ISE,BEE_ESE,BEE_THEORY_TOT,BEE_TW,\
-                EM1_ISE,EM1_ESE,EM1_THEORY_TOT,EM1_TW,\
-                EP_ISE,EP_ESE,EP_THEORY_TOT,EP_TW,\
-                BXE_ISE,BXE_ESE,BXE_THEORY_TOT,BXE_TW,\
-                EC_ISE,EC_ESE,EC_THEORY_TOT,EC_TW,\
-                PPS_ISE,PPS_ESE,PPS_THEORY_TOT,PPS_TW,SGPA\n')
+EM_ISE,EM_ESE,EM_THEORY_TOT,EM_TW,\
+SME_ISE,SME_ESE,SME_THEORY_TOT,SME_TW,\
+BEE_ISE,BEE_ESE,BEE_THEORY_TOT,BEE_TW,\
+EM1_ISE,EM1_ESE,EM1_THEORY_TOT,EM1_TW,\
+EP_ISE,EP_ESE,EP_THEORY_TOT,EP_TW,\
+BXE_ISE,BXE_ESE,BXE_THEORY_TOT,BXE_TW,\
+EC_ISE,EC_ESE,EC_THEORY_TOT,EC_TW,\
+PPS_ISE,PPS_ESE,PPS_THEORY_TOT,PPS_TW,SGPA\n')
 
             # Loop over all students
             for i in range(len(sr_nos)):
