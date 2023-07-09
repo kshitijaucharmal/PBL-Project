@@ -1,14 +1,3 @@
-print("Matplotlib")
-# line plot
-import matplotlib.pyplot as plt
-
-x = [0,1,2,3,4,5,6,7,8]
-y = [0,1,2,3,4,5,6,7,8]
-
-plt.title("Line Plot")
-plt.xlabel("X-axis")
-plt.ylabel("Y-axis")
-
-
-plt.plot(x,y)
-plt.show()
+version https://git-lfs.github.com/spec/v1
+oid sha256:91dfe9b3f4c6860c424b32cf1d4f3f3bd8f8e805fee28b53cdd400cd79ea9da2
+size 218

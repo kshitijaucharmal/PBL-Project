@@ -1,11 +1,3 @@
-num_d = {1:10,2:20,3:30,4:40,5:50,6:60,7:70,8:80,9:90}
-
-def is_key_present(x):
-    
-    if x in num_d:
-        print("Key is present in the dictionary")
-    else:
-        print("Not present")
-is_key_present(8)
-is_key_present(10)
-    
+version https://git-lfs.github.com/spec/v1
+oid sha256:e30ea6341a4c2061b4739a5db352bdcf2bec117b64c08397650a35c0bc0d7cad
+size 243

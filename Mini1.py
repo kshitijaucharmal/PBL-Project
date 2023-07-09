@@ -1,14 +1,3 @@
-# # Madlibs
-# # string concatenation (how you put strings together)
-scientist = "Isaac Newton"
-# print("The Great",scientist)
-# # Or
-# print(f"The Great {scientist}")
-# print("The Great " + scientist)
-
-adj = input()
-verb1 = input()
-verb2 = input()
-madlib = f"Quantam computung is so {adj}! Its makes me so excited all the time \
-    now its my second {verb1}. Stay focused and {verb2} like you are {scientist}"
-print(madlib)
+version https://git-lfs.github.com/spec/v1
+oid sha256:4244ef0b127a8ce7e308c7a41346fa85c3b935f0b8f598c7912de6a052f32d3d
+size 437

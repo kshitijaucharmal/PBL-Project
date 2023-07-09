@@ -1,14 +1,3 @@
-import math
-from math import sqrt, ceil, floor
-
-print(floor(6.6))
-print(sqrt(11))
-print(ceil(6.6))
-
-import PyPDF2
-from PyPDF2 import PdfReader
-reader  = PdfReader("Applicationform.pdf")
-print(len(reader.pages))
-page = reader.pages[0]
-text = page.extract_text()
-print(text)
+version https://git-lfs.github.com/spec/v1
+oid sha256:7669826ed623acef619653812a4c78e74c17c1b5e070ab9b83536b6b501cea42
+size 285
