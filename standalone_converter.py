@@ -1,13 +1,27 @@
 from converter import Converter
 import os
 from tqdm import tqdm
+import optparse
 
-# Manually giving this for now
-pdfpath = './students.pdf'
-pages_to_be_skipped = [2, 3, 4]
+# Options
+parser = optparse.OptionParser()
+parser.add_option('-p', '--pdf', help="Path to result pdf")
+parser.add_option('-o', '--output', help=f"Output Path for csv (default={os.getcwd()}/output.csv)", default=f'{os.getcwd()}/output.csv')
+parser.add_option('-s', '--skip', help="Pages to be skipped [Ex: \'1,2,3,4\'])", default = [])
+(options, args) = parser.parse_args()
+
+# Check if result pdf is given
+if not options.pdf:
+    print('Error: Please provide the result pdf')
+    parser.print_help()
+    exit()
+
+# Set values
+pdfpath = options.pdf
+pages_to_be_skipped = options.skip
 
 # Converter object
-csvpath = f'{os.getcwd()}/output.csv'
+csvpath = options.output
 converter = Converter(pdfpath, csvpath)
 
 n = converter.n_pages
