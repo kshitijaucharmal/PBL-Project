@@ -18,7 +18,7 @@ if not options.pdf:
 
 # Set values
 pdfpath = options.pdf
-pages_to_be_skipped = list(map(int, str(options.skip).split(',')))
+pages_to_be_skipped = list(map(int, str(options.skip).split(','))) if len(options.skip) != 0 else []
 
 # Converter object
 csvpath = options.output
