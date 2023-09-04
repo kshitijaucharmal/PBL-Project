@@ -7,7 +7,7 @@ import optparse
 parser = optparse.OptionParser()
 parser.add_option('-p', '--pdf', help="Path to result pdf")
 parser.add_option('-o', '--output', help=f"Output Path for csv (default={os.getcwd()}/output.csv)", default=f'{os.getcwd()}/output.csv')
-parser.add_option('-s', '--skip', help="Pages to be skipped [Ex: \'1,2,3,4\'])", default = [])
+parser.add_option('-s', '--skip', help="Pages to be skipped [Ex: \'1,2,3,4\'])", default = '')
 (options, args) = parser.parse_args()
 
 # Check if result pdf is given
@@ -18,7 +18,7 @@ if not options.pdf:
 
 # Set values
 pdfpath = options.pdf
-pages_to_be_skipped = options.skip
+pages_to_be_skipped = list(map(int, str(options.skip).split(',')))
 
 # Converter object
 csvpath = options.output
