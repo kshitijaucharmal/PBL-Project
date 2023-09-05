@@ -133,7 +133,7 @@ SGPA\n')
                     self.other_subjects(e, current_marks, sr_nos[i])
 
                 # Write the sgpa
-                # e.write(self.sgpa[i])
+                e.write(self.sgpa[i])
                 # Newline at the end
                 e.write('\n')
         pass
