@@ -17,6 +17,8 @@ class Converter:
         self.all_marks = []
         self.sgpa = []
 
+        self.mech_first = []
+
         # Read the pdf file
         self.converted_doc = PyPDF2.PdfReader(pdfpath)
         
@@ -41,8 +43,11 @@ class Converter:
         # Extract text
         page = self.converted_doc.pages[i].extract_text()
 
-        # Check if Sem2 exists 
-        sem2 = re.findall('SEM\.:2', page)
+        # find sem2 location
+        sem2_loc = re.search('SEM\.:2', page).span()[0]
+
+        # Check which subject group is first
+        self.mech_first.append(re.search(r'101011 ENGINEERING MECHANICS', page).span()[0] < sem2_loc)
 
         # Skip this page if 2 sems
         # if len(sem2) > 0:
@@ -90,116 +95,185 @@ class Converter:
         # Finding Sr nos. With Regex
         sr_nos = re.findall(r'F1900\S*', self.document)
 
-
         try:
             e = open(self.csvpath, 'w')
-        except Exception:
+        except Exception as e:
             self.write_error = True
+            print(e)
             return
 
         # Write to csv
         with e:
             # Write all subject names
             e.write('Rollno,\
-EM_ISE,EM_ESE,EM_THEORY_TOT,EM_TW,\
-SME_ISE,SME_ESE,SME_THEORY_TOT,SME_TW,\
-BEE_ISE,BEE_ESE,BEE_THEORY_TOT,BEE_TW,\
-EM1_ISE,EM1_ESE,EM1_THEORY_TOT,EM1_TW,\
-EP_ISE,EP_ESE,EP_THEORY_TOT,EP_TW,\
-BXE_ISE,BXE_ESE,BXE_THEORY_TOT,BXE_TW,\
-EC_ISE,EC_ESE,EC_THEORY_TOT,EC_TW,\
-PPS_ISE,PPS_ESE,PPS_THEORY_TOT,PPS_TW,\
-EM2_ISE,EM2_ESE,EM2_THEORY_TOT,EM2_TW,\
+EM_ISE,EM_ESE,EM_TOT,EM_PR,\
+SME_ISE,SME_ESE,SME_TOT,SME_PR,\
+BEE_ISE,BEE_ESE,BEE_TOT,BEE_PR,\
+EM1_ISE,EM1_ESE,EM1_TOT,EM1_TW,\
+EP_ISE,EP_ESE,EP_TOT,EP_PR,\
+BXE_ISE,BXE_ESE,BXE_TOT,BXE_PR,\
+EM2_ISE,EM2_ESE,EM2_TOT,EM2_TW,\
+EC_ISE,EC_ESE,EC_TOT,EC_PR,\
+PPS_ISE,PPS_ESE,PPS_TOT,PPS_PR,\
 EG_ESE,EG_TOT,EG_TW,\
 WS_PR,\
 PBL_TW,PBL_PR,\
 SGPA\n')
 
             # Loop over all students
+            # for i in range(len(sr_nos)):
+            # Just 2 for now
             for i in range(len(sr_nos)):
                 # Temporarily store current marks
                 current_marks = self.all_marks[i]
                 # Write based on subjects
-                if self.subject_set[i]:
-                    self.subject_set1(e, current_marks, sr_nos[i])
+                if self.mech_first[i]:
+                    self.mechanics_first(e, current_marks, sr_nos[i])
                 else:
-                    self.subject_set2(e, current_marks, sr_nos[i])
+                    self.other_subjects(e, current_marks, sr_nos[i])
 
                 # Write the sgpa
-                e.write(self.sgpa[i])
+                # e.write(self.sgpa[i])
                 # Newline at the end
                 e.write('\n')
         pass
 
-    def subject_set1(self, e, current_marks, sr_no):
-        e.write(sr_no+',')
+    def mechanics_first(self, e, current_marks, sr_no):
+        e.write(sr_no + ',')
 
-        #First subject SME
-        e.write(',' * 4)
+        # MECHANICS
         e.write(current_marks[1][:3] + ',')
         e.write(current_marks[2][:3] + ',')
         e.write(current_marks[3][:3] + ',')
         e.write(current_marks[4][:3] + ',')
 
-        #Third subject em1
-        e.write(',' * 4)
-        e.write(current_marks[9][:3] + ',')
-        e.write(current_marks[10][:3] + ',')
-        e.write(current_marks[11][:3] + ',')
-        e.write(current_marks[12][:3] + ',')
-
-        #Second subject BXE
-        e.write(',' * 4)
+        # SME
         e.write(current_marks[5][:3] + ',')
         e.write(current_marks[6][:3] + ',')
         e.write(current_marks[7][:3] + ',')
         e.write(current_marks[8][:3] + ',')
 
-        #Fourth object ec
+        # BEE
+        e.write(current_marks[9][:3] + ',')
+        e.write(current_marks[10][:3] + ',')
+        e.write(current_marks[11][:3] + ',')
+        e.write(current_marks[12][:3] + ',')
+
+        # EM1
         e.write(current_marks[13][:3] + ',')
         e.write(current_marks[14][:3] + ',')
         e.write(current_marks[15][:3] + ',')
         e.write(current_marks[16][:3] + ',')
 
-        #Fifth subject pps
+        # EP
         e.write(current_marks[17][:3] + ',')
         e.write(current_marks[18][:3] + ',')
         e.write(current_marks[19][:3] + ',')
         e.write(current_marks[20][:3] + ',')
-        e.write(',' * 10)
+
+        # BXE
+        e.write(current_marks[25][:3] + ',')
+        e.write(current_marks[26][:3] + ',')
+        e.write(current_marks[27][:3] + ',')
+        e.write(current_marks[28][:3] + ',')
+
+        # EM2
+        e.write(current_marks[29][:3] + ',')
+        e.write(current_marks[30][:3] + ',')
+        e.write(current_marks[31][:3] + ',')
+        e.write(current_marks[32][:3] + ',')
+
+        # EC
+        e.write(current_marks[33][:3] + ',')
+        e.write(current_marks[34][:3] + ',')
+        e.write(current_marks[35][:3] + ',')
+        e.write(current_marks[36][:3] + ',')
+
+        # PPS
+        e.write(current_marks[37][:3] + ',')
+        e.write(current_marks[38][:3] + ',')
+        e.write(current_marks[39][:3] + ',')
+        e.write(current_marks[40][:3] + ',')
+
+        # EG
+        e.write(current_marks[22][:3] + ',')
+        e.write(current_marks[23][:3] + ',')
+        e.write(current_marks[24][:3] + ',')
+
+        # WS
+        e.write(current_marks[21][:3] + ',')
+
+        # PBL
+        e.write(current_marks[41][:3] + ',')
+        e.write(current_marks[42][:3] + ',')
         pass
 
-    def subject_set2(self, e, current_marks, sr_no):
+    def other_subjects(self, e, current_marks, sr_no):
         e.write(sr_no + ',')
 
-        # First Subject
-        e.write(current_marks[1][:3]  + ',')
-        e.write(current_marks[2][:3]  + ',')
-        e.write(current_marks[3][:3]  + ',')
+        # MECHANICS
+        e.write(current_marks[22][:3] + ',')
+        e.write(current_marks[23][:3] + ',')
+        e.write(current_marks[24][:3] + ',')
+        e.write(current_marks[25][:3] + ',')
+
+        # SME
+        e.write(current_marks[1][:3] + ',')
+        e.write(current_marks[2][:3] + ',')
+        e.write(current_marks[3][:3] + ',')
         e.write(current_marks[4][:3] + ',')
-        
-        #Second subject sme
-        e.write(current_marks[5][:3] + ',')
-        e.write(current_marks[6][:3] + ',')
-        e.write(current_marks[7][:3] + ',')
-        e.write(current_marks[8][:3] + ',')
-        
-        #Third subject BEE
+
+        # BEE
+        e.write(current_marks[29][:3] + ',')
+        e.write(current_marks[30][:3] + ',')
+        e.write(current_marks[31][:3] + ',')
+        e.write(current_marks[32][:3] + ',')
+
+        # EM1
         e.write(current_marks[9][:3] + ',')
         e.write(current_marks[10][:3] + ',')
         e.write(current_marks[11][:3] + ',')
         e.write(current_marks[12][:3] + ',')
-        
-        #Fourth object em1
+
+        # EP
+        e.write(current_marks[33][:3] + ',')
+        e.write(current_marks[34][:3] + ',')
+        e.write(current_marks[35][:3] + ',')
+        e.write(current_marks[36][:3] + ',')
+
+        # BXE
+        e.write(current_marks[5][:3] + ',')
+        e.write(current_marks[6][:3] + ',')
+        e.write(current_marks[7][:3] + ',')
+        e.write(current_marks[8][:3] + ',')
+
+        # EM2
+        e.write(current_marks[37][:3] + ',')
+        e.write(current_marks[38][:3] + ',')
+        e.write(current_marks[39][:3] + ',')
+        e.write(current_marks[40][:3] + ',')
+
+        # EC
         e.write(current_marks[13][:3] + ',')
         e.write(current_marks[14][:3] + ',')
         e.write(current_marks[15][:3] + ',')
         e.write(current_marks[16][:3] + ',')
-        
-        #Fifth subject ep
+
+        # PPS
         e.write(current_marks[17][:3] + ',')
         e.write(current_marks[18][:3] + ',')
         e.write(current_marks[19][:3] + ',')
         e.write(current_marks[20][:3] + ',')
-        e.write(',' * 22)
+
+        # EG
+        e.write(current_marks[26][:3] + ',')
+        e.write(current_marks[27][:3] + ',')
+        e.write(current_marks[28][:3] + ',')
+
+        # WS
+        e.write(current_marks[21][:3] + ',')
+
+        # PBL
+        e.write(current_marks[41][:3] + ',')
+        e.write(current_marks[42][:3] + ',')
         pass
