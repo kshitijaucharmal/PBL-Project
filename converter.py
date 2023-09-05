@@ -9,7 +9,8 @@ class Converter:
         self.csvpath = csvpath
 
         # Pages with errors
-        self.two_sem_prob = []
+        # Doesn't have sem2
+        self.no_sem2_prob = []
         self.write_error = False
 
         self.subject_set = []
@@ -44,7 +45,12 @@ class Converter:
         page = self.converted_doc.pages[i].extract_text()
 
         # find sem2 location
-        sem2_loc = re.search('SEM\.:2', page).span()[0]
+        sem2 = re.search('SEM\.:2', page)
+        if sem2:
+            sem2_loc = sem2.span()[0]
+        else:
+            self.no_sem2_prob.append(i+1)
+            return
 
         # Check which subject group is first
         self.mech_first.append(re.search(r'101011 ENGINEERING MECHANICS', page).span()[0] < sem2_loc)
@@ -88,7 +94,10 @@ class Converter:
             s += '!!! File is already open, Please try again after closing. !!!\n'
             return s
         s += 'These Pages have been skipped due to faults: \n'
-        s += str(self.two_sem_prob)
+        if len(self.no_sem2_prob) < 10:
+            s += str(self.no_sem2_prob)
+        else:
+            s += str(self.no_sem2_prob[:10]) + '...'
         return s
 
     def write(self):
