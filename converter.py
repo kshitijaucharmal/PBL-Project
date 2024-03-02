@@ -1,6 +1,7 @@
 # Imports
-import PyPDF2 # To convert pdf to text
 import re # Use regex
+import pandas as pd
+import pdfplumber
 
 class Converter:
     def __init__(self, pdfpath, csvpath):
