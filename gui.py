@@ -122,6 +122,8 @@ class MainWindow(QWidget):
         # Convert page by page
         with pdfplumber.open(self.path) as pdf:
             for i, page in enumerate(pdf.pages):
+                if i in self.pages_to_be_skipped:
+                    continue
                 self.progressbar.setValue(i + 1)
                 file = []
                 lines = page.extract_text().split("\n")
