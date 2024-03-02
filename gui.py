@@ -1,13 +1,20 @@
-from PyQt6.QtWidgets import QFileDialog, QWidget, QGridLayout, QLineEdit, QPushButton, QLabel, QProgressBar
+from PyQt6.QtWidgets import (
+    QFileDialog,
+    QWidget,
+    QGridLayout,
+    QLineEdit,
+    QPushButton,
+    QLabel,
+    QProgressBar,
+)
 from pathlib import Path
-import qdarktheme
 from PyQt6.QtCore import Qt
 import os
+import pdfplumber
+import pandas as pd
 
-#To find if user is on dark theme
-import darkdetect
+from converter2 import Converter
 
-from converter import Converter
 
 class MainWindow(QWidget):
     def __init__(self, *args, **kwargs):
@@ -18,38 +25,30 @@ class MainWindow(QWidget):
         self.progress = 0
         self.pages_to_be_skipped = []
 
-        self.setWindowTitle('Result Converter')
+        self.setWindowTitle("Result Converter")
         self.setGeometry(100, 100, 900, 210)
-
-        # Dark Mode detection
-        if darkdetect.isDark():
-            qdarktheme.setup_theme()
-        else:
-            qdarktheme.setup_theme("light")
 
         # layout - Grid
         layout = QGridLayout()
         self.setLayout(layout)
 
         # file selection Button
-        file_browse = QPushButton('Browse')
+        file_browse = QPushButton("Browse")
         # Connect to file selector
         file_browse.clicked.connect(self.open_file_dialog)
 
         # Save Button
-        file_save = QPushButton('Submit',self)
-        file_save.clicked.connect(self.submit)
-
-        # Skip Pages text
+        file_save = QPushButton("Submit", self)
+        file_save.clicked.connect(self.submit)  # Skip Pages text
         skip_text = QLabel("<h3>Skip:</h3>")
         skip_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.skipped_pages = QLineEdit()
 
         # Label To show file
-        Name_Label=QLabel("<h3>File:</h3>")
+        Name_Label = QLabel("<h3>File:</h3>")
         # Align file to center of grid box
         Name_Label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        
+
         # file_name_location
         self.filename_edit = QLineEdit()
         # self.filename_edit.setText(str(self.path))
@@ -63,7 +62,9 @@ class MainWindow(QWidget):
 
         # Error text
         self.error_text = QLabel()
-        self.give_error("Enter Pages to be skipped in a comma seperated format. For ex: 1,2,3,4")
+        self.give_error(
+            "Enter Pages to be skipped in a comma seperated format. For ex: 1,2,3,4"
+        )
 
         # Add all widgets
         layout.addWidget(Name_Label, 0, 0)
@@ -82,11 +83,11 @@ class MainWindow(QWidget):
         pass
 
     def give_info(self, text):
-        self.info_text.setText(f'<center>{text}</center>')
+        self.info_text.setText(f"<center>{text}</center>")
         pass
 
     def give_error(self, text):
-        self.error_text.setText(f'<b><center>{text}</center><b>')
+        self.error_text.setText(f"<b><center>{text}</center><b>")
         pass
 
     def print_pages(self):
@@ -94,7 +95,7 @@ class MainWindow(QWidget):
         if len(k) == 0:
             self.pages_to_be_skipped = []
             return
-        self.pages_to_be_skipped = list(map(int, k.split(',')))
+        self.pages_to_be_skipped = list(map(int, k.split(",")))
 
     def set_progress(self, val):
         if val >= self.progressbar.maximum():
@@ -103,48 +104,43 @@ class MainWindow(QWidget):
         pass
 
     def submit(self):
-        if self.path == '':
+        if self.path == "":
             self.give_info("No Path Provided")
             return
 
         self.print_pages()
 
         # Converter object
-        csvpath = f'{os.getcwd()}/output.csv'
+        csvpath = f"{os.getcwd()}/output.csv"
         converter = Converter(self.path, csvpath)
 
         n = converter.n_pages
         self.progressbar.setMinimum(0)
         self.progressbar.setMaximum(n)
-        self.progressbar.setRange(0,n)
+        self.progressbar.setRange(0, n)
 
         # Convert page by page
-        for i in range(n):
-            if (i+1) in self.pages_to_be_skipped:
-                continue
-            self.progressbar.setValue(i+1)
-            converter.step(i)
+        with pdfplumber.open(self.path) as pdf:
+            for i, page in enumerate(pdf.pages):
+                self.progressbar.setValue(i + 1)
+                file = []
+                lines = page.extract_text().split("\n")
+                for line in lines[1:]:
+                    file.append(line)
+                df = pd.DataFrame(file)
+                converter.step(df)
 
         # Write to csv file
         converter.write()
 
-        error = converter.report_errors()
-            
-        self.give_error(error)
-        if '!!!' in error:
-            self.give_info('')
-            return
-
-        info = f'Saved file {csvpath}'
-        info += f'\n<b>Manually Skipped Pages: {self.pages_to_be_skipped}<b>'
+        info = f"Saved file {csvpath}"
+        info += f"\n<b>Manually Skipped Pages: {self.pages_to_be_skipped}<b>"
         self.give_info(info)
         pass
 
     def open_file_dialog(self):
-        filename, filetype = QFileDialog.getOpenFileName(self,
-            "Select a File",
-            "", # Current directory if ""
-            "pdf files (*.pdf)"
+        filename, filetype = QFileDialog.getOpenFileName(
+            self, "Select a File", "", "pdf files (*.pdf)"  # Current directory if ""
         )
         if filename:
             self.path = Path(filename)
